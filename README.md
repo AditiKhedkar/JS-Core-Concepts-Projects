@@ -1,5 +1,7 @@
 # Event Propagation Visualizer
 
+deployed on 
+
 This is a simple visual interactive demo to understand **Event Capturing**, **Bubbling**, and **Delegation** in JavaScript.
 
 ## Features
@@ -28,6 +30,13 @@ To deploy this project on Netlify:
 1. Upload the entire folder or zip it.
 2. Drag & drop to Netlify or link via GitHub.
 3. Netlify auto-detects it as a static HTML project.
+
+| Concept        | Purpose                                                               |
+| -------------- | --------------------------------------------------------------------- |
+| **Capturing**  | Allow parent to intercept events *before* child gets it               |
+| **Bubbling**   | Allow parent to react *after* child has handled the event             |
+| **Delegation** | Efficiently handle events for many child elements via a single parent |
+
 
 ---
 Made for educational purposes ✨

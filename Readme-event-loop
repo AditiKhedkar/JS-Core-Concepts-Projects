@@ -1,0 +1,153 @@
+https://stupendous-praline-9eceb5.netlify.app/ --deployed 
+
+
+
+Technical Documentation: JavaScript Event Loop Visualizer
+Architecture Overview
+The visualizer implements a state machine that simulates JavaScript's event loop behavior through discrete execution steps. It models the four key components of the JavaScript runtime environment:
+
+Call Stack - Where function execution contexts are stored
+Web APIs - Browser-provided asynchronous operations (setTimeout, DOM events, etc.)
+Microtask Queue - High-priority queue for Promise callbacks and queueMicrotask
+Callback Queue - Standard queue for async callbacks (setTimeout, setInterval, etc.)
+Core Data Structures
+
+interface Task {
+  id: string;           // Unique identifier
+  name: string;         // Display name
+  type: 'sync' | 'async' | 'microtask';  // Execution type
+  delay?: number;       // Simulated delay for async operations
+  color: string;        // Visual representation color
+  code?: string;        // Associated code snippet
+}
+
+interface ExecutionState {
+  callStack: Task[];        // Currently executing functions
+  callbackQueue: Task[];    // Waiting async callbacks
+  microtaskQueue: Task[];   // Waiting microtasks
+  webApis: Task[];         // Active async operations
+  executedTasks: Task[];   // Completed tasks
+  currentStep: number;     // Current execution position
+  isRunning: boolean;      // Animation state
+}
+Event Loop Algorithm Implementation
+The visualizer follows JavaScript's actual event loop specification:
+
+Execute synchronous code - All sync tasks go directly to call stack
+Process microtasks - Empty microtask queue completely before moving to next step
+Process one callback - Take one task from callback queue
+Repeat - Continue until all queues are empty
+
+// Simplified event loop logic
+if (callStack.length === 0) {
+  if (microtaskQueue.length > 0) {
+    // Process ALL microtasks first
+    const microtask = microtaskQueue.shift();
+    callStack.push(microtask);
+  } else if (callbackQueue.length > 0) {
+    // Then process ONE callback
+    const callback = callbackQueue.shift();
+    callStack.push(callback);
+  }
+}
+Complex Scenario Deep Dive
+The Code
+
+console.log('1');                           // Step 1
+setTimeout(() => console.log('2'), 0);      // Step 2
+Promise.resolve().then(() => console.log('3')); // Step 3
+setTimeout(() => console.log('4'), 0);      // Step 4
+console.log('5');                           // Step 5
+Expected Output Order
+
+1
+5
+3
+2
+4
+Step-by-Step Execution Analysis
+Phase 1: Initial Synchronous Execution
+Step 1: console.log('1')
+
+Action: Synchronous operation goes directly to call stack
+State: Call stack executes immediately
+Output: "1"
+Why: Synchronous code has highest priority
+Step 2: setTimeout(() => console.log('2'), 0)
+
+Action: Async operation registered with Web APIs
+State: Timer starts in Web APIs, callback prepared for later
+Output: None yet
+Why: setTimeout is non-blocking; execution continues immediately
+Step 3: Promise.resolve().then(() => console.log('3'))
+
+Action: Promise resolves immediately, callback queued as microtask
+State: Microtask queue receives the callback
+Output: None yet
+Why: Promise callbacks are microtasks, not regular callbacks
+Step 4: setTimeout(() => console.log('4'), 0)
+
+Action: Second async operation registered with Web APIs
+State: Another timer starts, second callback prepared
+Output: None yet
+Why: Same as step 2 - non-blocking async operation
+Step 5: console.log('5')
+
+Action: Final synchronous operation
+State: Call stack executes immediately
+Output: "5"
+Why: Synchronous code continues until main thread is clear
+Phase 2: Event Loop Processing
+Step 6: Event loop tick - Call stack is now empty
+
+Check microtask queue: Contains Promise callback
+Action: Execute () => console.log('3')
+Output: "3"
+Why: Microtasks have priority over callbacks - this is the key insight!
+Step 7: Event loop tick - Microtask queue is empty
+
+Check callback queue: Contains first setTimeout callback
+Action: Execute () => console.log('2')
+Output: "2"
+Why: First setTimeout callback that was registered
+Step 8: Event loop tick - Process next callback
+
+Check callback queue: Contains second setTimeout callback
+Action: Execute () => console.log('4')
+Output: "4"
+Why: Second setTimeout callback in registration order
+Critical Insights
+1. Microtask Priority
+The most important concept demonstrated is that microtasks always execute before callbacks, regardless of timing:
+
+
+setTimeout(() => console.log('callback'), 0);
+Promise.resolve().then(() => console.log('microtask'));
+// Output: microtask, callback (even though setTimeout was registered first)
+2. Queue Processing Differences
+Microtask Queue: Processed completely (all microtasks) before moving on
+Callback Queue: Processed one at a time per event loop tick
+3. Synchronous Code Blocking
+All synchronous code must complete before any async callbacks execute:
+
+
+console.log('start');
+setTimeout(() => console.log('async'), 0);
+for(let i = 0; i < 1000000; i++) {} // Blocks everything
+console.log('end');
+// Output: start, end, async (async waits for synchronous code)
+Real-World Implications
+This execution order affects:
+
+Performance: Heavy synchronous code blocks all async operations
+User Experience: UI updates (which use microtasks) get priority over timers
+Promise Chains: .then() callbacks execute before setTimeout callbacks
+Error Handling: Promise rejections are handled before other async operations
+Visualizer Implementation Details
+The visualizer simulates these behaviors through:
+
+Timed State Updates: setTimeout calls simulate async operation completion
+Queue Management: Proper ordering of microtasks vs callbacks
+Visual Feedback: Color coding and animations show execution flow
+Step Control: Manual stepping allows detailed observation of each phase
+This makes the abstract concept of the event loop tangible and observable, helping developers understand why JavaScript behaves the way it does with asynchronous code.

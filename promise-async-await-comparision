@@ -35,3 +35,8 @@ async function getData() {
 }
 
 getData();
+
+
+Data fetched using Promise
+Data fetched using async/await
+Let me know if you want examples with fetch() or chaining multiple async calls.

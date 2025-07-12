@@ -1,0 +1,42 @@
+promise sample code
+function fetchDataWithPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Data fetched using Promise");
+    }, 1000);
+  });
+}
+
+fetchDataWithPromise()
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+
+async await
+function fetchData() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Data fetched using async/await");
+    }, 1000);
+  });
+}
+
+async function getData() {
+  try {
+    const data = await fetchData();
+    console.log(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+getData();
+
+
+Data fetched using Promise
+Data fetched using async/await
+Let me know if you want examples with fetch() or chaining multiple async calls.

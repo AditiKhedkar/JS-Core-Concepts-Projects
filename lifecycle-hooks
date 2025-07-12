@@ -1,0 +1,63 @@
+import { Component, OnInit, OnChanges, DoCheck, AfterContentInit, 
+         AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-lifecycle-demo',
+  template: `
+    <h3>Lifecycle Demo</h3>
+    <p>Input value: {{ inputValue }}</p>
+  `
+})
+export class LifecycleDemoComponent implements 
+  OnInit, OnChanges, DoCheck, AfterContentInit, 
+  AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+
+  @Input() inputValue: string = '';
+
+  constructor() {
+    console.log('Constructor called');
+  }
+
+  ngOnChanges() {
+    console.log('ngOnChanges called');
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit called');
+  }
+
+  ngDoCheck() {
+    console.log('ngDoCheck called');
+  }
+
+  ngAfterContentInit() {
+    console.log('ngAfterContentInit called');
+  }
+
+  ngAfterContentChecked() {
+    console.log('ngAfterContentChecked called');
+  }
+
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit called');
+  }
+
+  ngAfterViewChecked() {
+    console.log('ngAfterViewChecked called');
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy called');
+  }
+}
+
+
+output 
+Constructor called
+ngOnChanges called
+ngOnInit called
+ngDoCheck called
+ngAfterContentInit called
+ngAfterContentChecked called
+ngAfterViewInit called
+ngAfterViewChecked called

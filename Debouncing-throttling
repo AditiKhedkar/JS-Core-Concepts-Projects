@@ -1,0 +1,57 @@
+ Debouncing and Throttling
+
+Used for performance optimization of high-frequency events like scroll, resize, keypress, etc.
+
+Debouncing:
+- Calls the function only after a delay, once the event stops firing.
+- Useful for search inputs, auto-save, etc.
+- Only the last function call is executed.
+
+Example (Debounce):
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, delay);
+  };
+}
+
+// Usage
+const handleInput = debounce(() => {
+  console.log("API call");
+}, 500);
+
+input.addEventListener("input", handleInput);
+
+---
+
+Throttling:
+- Limits the function call to once per specified interval.
+- Useful for scroll, resize events.
+- Executes the function at regular intervals.
+
+Example (Throttle):
+function throttle(fn, interval) {
+  let lastCall = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastCall >= interval) {
+      lastCall = now;
+      fn.apply(this, args);
+    }
+  };
+}
+
+// Usage
+const handleScroll = throttle(() => {
+  console.log("Scroll event");
+}, 300);
+
+window.addEventListener("scroll", handleScroll);
+
+---
+
+Debounce → waits until user stops
+Throttle → limits calls over time

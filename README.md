@@ -1,4 +1,5 @@
 # Event Propagation Visualizer
+<img width="618" height="407" alt="image" src="https://github.com/user-attachments/assets/afc6aa04-a52c-4a54-9256-d8cbf0ffba37" />
 
 deployed on 
 

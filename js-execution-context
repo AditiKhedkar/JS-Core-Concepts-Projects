@@ -1,0 +1,29 @@
+How JavaScript Works + Execution Context
+
+1. JavaScript is single-threaded and synchronous.
+2. Code runs inside an Execution Context (EC).
+3. Two main types of EC:
+   - Global Execution Context (created by default)
+   - Function Execution Context (created when a function is called)
+
+Each Execution Context has two phases:
+- Memory Phase:
+    - Variables declared with var are hoisted and set to undefined.
+    - Functions are hoisted with their full definition.
+    - let and const are hoisted but not initialized (Temporal Dead Zone).
+- Execution Phase:
+    - Code runs line by line and values are assigned.
+
+Call Stack:
+- Keeps track of execution contexts.
+- Works on LIFO (Last In, First Out) principle.
+- New function call → push to stack.
+- Function complete → pop from stack.
+
+Example:
+var a = 10;
+function greet() {
+  var b = 20;
+  console.log(a + b);
+}
+greet(); // Outputs: 30
